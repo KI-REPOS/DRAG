@@ -1,0 +1,2 @@
+This is a test forensic document about USB analysis.
+USB devices can contain important evidence for investigations.

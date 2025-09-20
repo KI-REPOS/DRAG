@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cyber-Forensics Q&A System</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔍 Cyber-Forensics Q&A System</h1>
+            <p>Ask questions about hardware, USBs, cameras, or system analysis</p>
+        </header>
+
+        <div class="chat-container">
+            <div class="chat-history" id="chatHistory">
+                <div class="welcome-message">
+                    <p>Welcome! I'm your cyber-forensics assistant. Ask me about:</p>
+                    <ul>
+                        <li>Hardware analysis and examination</li>
+                        <li>USB device forensics</li>
+                        <li>Camera and multimedia analysis</li>
+                        <li>System and memory forensics</li>
+                        <li>Digital evidence collection</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <textarea 
+                    id="questionInput" 
+                    placeholder="Type your forensic question here..." 
+                    rows="3"
+                ></textarea>
+                <div class="controls">
+                    <button onclick="askQuestion()" id="askBtn">Ask Question</button>
+                    <button onclick="clearConversation()" class="secondary">Clear Chat</button>
+                    <button onclick="exportConversation()" class="secondary">Export</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="sources-panel" id="sourcesPanel" style="display: none;">
+            <h3>📚 Source References</h3>
+            <div id="sourcesContent"></div>
+        </div>
+    </div>
+
+    <script>
+        let conversation = [];
+
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            const askBtn = document.getElementById('askBtn');
+            
+            if (!question) return;
+            
+            // Add user message to UI
+            addMessage('user', question);
+            input.value = '';
+            askBtn.disabled = true;
+            askBtn.textContent = 'Processing...';
+            
+            try {
+                const response = await fetch('/api/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ question })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    addMessage('assistant', data.response, data.sources, data.timestamp);
+                    if (data.sources && data.sources.length > 0) {
+                        showSources(data.sources);
+                    }
+                } else {
+                    throw new Error(data.error || 'Unknown error');
+                }
+                
+            } catch (error) {
+                addMessage('error', `Error: ${error.message}`);
+            } finally {
+                askBtn.disabled = false;
+                askBtn.textContent = 'Ask Question';
+            }
+        }
+
+        function addMessage(role, content, sources = null, timestamp = null) {
+            const chatHistory = document.getElementById('chatHistory');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}-message`;
+            
+            const timestampStr = timestamp || new Date().toISOString();
+            const time = new Date(timestampStr).toLocaleTimeString();
+            
+            messageDiv.innerHTML = `
+                <div class="message-header">
+                    <strong>${role.toUpperCase()}</strong>
+                    <span class="timestamp">${time}</span>
+                </div>
+                <div class="message-content">${formatContent(content)}</div>
+            `;
+            
+            chatHistory.appendChild(messageDiv);
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+            
+            // Store in conversation history
+            conversation.push({
+                role,
+                content,
+                sources,
+                timestamp: timestampStr
+            });
+        }
+
+        function formatContent(content) {
+            // Convert line breaks and basic formatting
+            return content
+                .replace(/\n/g, '<br>')
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>');
+        }
+
+        function showSources(sources) {
+            const panel = document.getElementById('sourcesPanel');
+            const content = document.getElementById('sourcesContent');
+            
+            content.innerHTML = sources.map(source => `
+                <div class="source-item">
+                    <strong>Source:</strong> ${source.source}<br>
+                    <strong>Chunk:</strong> ${source.chunk_index}<br>
+                    <div class="source-content">${source.content.substring(0, 200)}...</div>
+                </div>
+            `).join('');
+            
+            panel.style.display = 'block';
+        }
+
+        async function clearConversation() {
+            try {
+                await fetch('/api/clear', { method: 'POST' });
+                
+                const chatHistory = document.getElementById('chatHistory');
+                const sourcesPanel = document.getElementById('sourcesPanel');
+                
+                chatHistory.innerHTML = `
+                    <div class="welcome-message">
+                        <p>Welcome! I'm your cyber-forensics assistant. Ask me about:</p>
+                        <ul>
+                            <li>Hardware analysis and examination</li>
+                            <li>USB device forensics</li>
+                            <li>Camera and multimedia analysis</li>
+                            <li>System and memory forensics</li>
+                            <li>Digital evidence collection</li>
+                        </ul>
+                    </div>
+                `;
+                
+                sourcesPanel.style.display = 'none';
+                conversation = [];
+                
+            } catch (error) {
+                alert('Error clearing conversation: ' + error.message);
+            }
+        }
+
+        async function exportConversation() {
+            try {
+                const response = await fetch('/api/export', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ conversation })
+                });
+                
+                if (response.ok) {
+                    const blob = await response.blob();
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `forensics_export_${new Date().toISOString().split('T')[0]}.txt`;
+                    document.body.appendChild(a);
+                    a.click();
+                    window.URL.revokeObjectURL(url);
+                    document.body.removeChild(a);
+                } else {
+                    throw new Error('Export failed');
+                }
+            } catch (error) {
+                alert('Error exporting conversation: ' + error.message);
+            }
+        }
+
+        // Allow pressing Enter to submit (with Shift+Enter for new line)
+        document.getElementById('questionInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                askQuestion();
+            }
+        });
+    </script>
+</body>
+</html>
