@@ -1,4 +1,4 @@
-# 🤖 D-RAG Pipeline — Dynnamic Retrieval-Augmented Generation (ChromaDB + Flask)
+# 🤖 D-RAG Pipeline — Dynnamic Retrieval-Augmented Generation (ChromaDB + Phi-2 + Flask)
 
 A **Flask-based RAG system** where users can upload **files** (`PDF, DOCX, PPT, TXT, PNG, JPEG`) or provide **URLs** (websites, YouTube videos).  
 Data is **converted into vector embeddings**, stored in **ChromaDB**, and queried through a clean web interface.  
