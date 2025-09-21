@@ -56,7 +56,9 @@ pip install -r requirements.txt
 ```
 </details> <details> <summary>🧠 Step 4 — Download the Phi-2 Model</summary>
 
+
 The Phi2Q_4_k.ggfu model (~1.66 GB) is not included in the repository.
+
 👉 [Download here](https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf)
 
 Place the file in the models/ directory.
@@ -64,6 +66,7 @@ Place the file in the models/ directory.
 </details>
 
 ▶️ **Execution**
+
 <details> <summary>📥 Step 1 — Ingest & Index Data</summary>
 
 Run to create vector embeddings/chunks and store them in ChromaDB:
@@ -71,9 +74,9 @@ Run to create vector embeddings/chunks and store them in ChromaDB:
 python ingest_data.py
 ```
 
-✅ Converts files/URLs into chunks
-✅ Creates embeddings
-✅ Stores vectors in ChromaDB
+- ✅ Converts files/URLs into chunks
+- ✅ Creates embeddings
+- ✅ Stores vectors in ChromaDB
 
 </details> <details> <summary>💡 Step 2 — Run the Flask Web App</summary>
 python app.py
