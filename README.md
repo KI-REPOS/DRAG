@@ -56,12 +56,11 @@ pip install -r requirements.txt
 ```
 </details> <details> <summary>🧠 Step 4 — Download the Phi-2 Model</summary>
 
-
-The Phi2Q_4_k.ggfu model (~1.66 GB) is not included in the repository.
+- The Phi2Q_4_k.ggfu model (~1.66 GB) is not included in the repository.
 
 👉 [Download here](https://huggingface.co/TheBloke/phi-2-GGUF/resolve/main/phi-2.Q4_K_M.gguf)
 
-Place the file in the models/ directory.
+- Place the file in the models/ directory.
 
 </details>
 
@@ -82,8 +81,8 @@ python ingest_data.py
 python app.py
 
 
-✅ Starts server at http://0.0.0.0:5000
-✅ Upload more files / paste URLs
-✅ Ask questions & get AI-polished results
+- ✅ Starts server at http://0.0.0.0:5000
+- ✅ Upload more files / paste URLs
+- ✅ Ask questions & get AI-polished results
 
 </details>
