@@ -19,6 +19,11 @@ It lets users upload documents (PDF, DOCX, PPT, TXT, PNG, JPEG) and URLs (websit
 🎨 Flask Web UI for seamless interaction
 
 <details> <summary><h2>⚡ Project Workflow</h2></summary>
+ <ul>
+    <li>Option 1</li>
+    <li>Option 2</li>
+    <li>Option 3</li>
+  </ul>
 🔹 Step 1: Ingest Data
 
 Run ingest_data.py
