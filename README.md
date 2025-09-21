@@ -1,4 +1,4 @@
-# 🤖 RAG Pipeline — Retrieval-Augmented Generation (ChromaDB + Flask)
+# 🤖 D-RAG Pipeline — Dynnamic Retrieval-Augmented Generation (ChromaDB + Flask)
 
 A **Flask-based RAG system** where users can upload **files** (`PDF, DOCX, PPT, TXT, PNG, JPEG`) or provide **URLs** (websites, YouTube videos).  
 Data is **converted into vector embeddings**, stored in **ChromaDB**, and queried through a clean web interface.  
@@ -78,8 +78,10 @@ python ingest_data.py
 - ✅ Stores vectors in ChromaDB
 
 </details> <details> <summary>💡 Step 2 — Run the Flask Web App</summary>
-python app.py
 
+```
+python app.py
+```
 
 - ✅ Starts server at http://0.0.0.0:5000
 - ✅ Upload more files / paste URLs
