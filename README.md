@@ -1,152 +1,91 @@
-#📚 Retrieval-Augmented Generation (RAG) Pipeline #
-##🔥 Overview ##
+# 🤖 RAG Pipeline — Retrieval-Augmented Generation (ChromaDB + Flask)
 
-This project implements a RAG pipeline using ChromaDB + Flask.
-It lets users upload documents (PDF, DOCX, PPT, TXT, PNG, JPEG) and URLs (websites, YouTube videos), converts them into vector embeddings, stores them in ChromaDB, and allows interactive querying with an LLM.
+A **Flask-based RAG system** where users can upload **files (PDF, DOCX, PPT, TXT, PNG, JPEG)** or provide **URLs (websites, YouTube videos)**.  
+The data is **converted into vector embeddings**, stored in **ChromaDB**, and queried through a web interface.  
+Retrieved chunks are polished by the **Phi-2 Quantized Model** before being shown to the user.
 
-✨ Key Highlights
+---
 
-🧩 Automatic Chunking + Embeddings
+## 🚀 Features
 
-📂 Multi-format support → PDF, DOCX, PPT, TXT, PNG, JPEG
+- 📂 **Multi-format ingestion** — PDF, DOCX, PPT, TXT, PNG, JPEG  
+- 🌐 **Web & YouTube support** — fetch website content & video transcripts  
+- ✂️ **Chunk-based embeddings** — improves retrieval quality  
+- 🧠 **ChromaDB integration** — efficient similarity search  
+- 💻 **Flask Web UI** — clean query interface  
+- 🔍 **Top-k retrieval** — fetches only the most relevant chunks  
+- 🎯 **LLM Polishing** — refined answers using **Phi-2 (quantized)**  
+- ⚡ **Two-step execution** — `ingest_data.py` (indexing) → `app.py` (querying)  
 
-🌐 Websites & YouTube ingestion
+---
 
-🗄️ Vector storage with ChromaDB
+## 📂 Use Cases
 
-🤖 Phi-2 Quantized LLM (phi2Q_4_k.ggfu)
+- 📝 **Custom Q&A Chatbot** over private docs  
+- 🎓 **Research assistant** for papers, slides, & YouTube lectures  
+- 🏢 **Enterprise knowledge base** with internal reports  
+- 📖 **Summarizer** for articles, PDFs, and videos  
 
-🎨 Flask Web UI for seamless interaction
+---
 
-<details> <summary><h2>⚡ Project Workflow</h2></summary>
- 
-🔹 Step 1: Ingest Data
+## 🛠️ Installation & Setup
 
-Run ingest_data.py
+<details>
+<summary>📦 Step 1 — Clone the repository</summary>
 
-Converts files/URLs → chunks → embeddings → stored in ChromaDB
-
-🔹 Step 2: Query System
-
-Run app.py
-
-Query → Retrieve top-k relevant chunks → Refined via Phi-2 LLM → Displayed in Flask UI
-
-</details>
-<details> <summary><h2>🛠️ Tech Stack</h2></summary>
-🖥️ Backend
-
-Python
-
-Flask
-
-📦 Database
-
-ChromaDB (Vector DB)
-
-🧠 LLM
-
-Phi-2 (Quantized phi2Q_4_k.ggfu)
-
-🔍 Embeddings
-
-Hugging Face Models
-
-🎨 Frontend
-
-Flask Templates (HTML, CSS)
-
-</details>
-<details> <summary><h2>📥 Installation & Setup</h2></summary>
-1️⃣ Clone Repo
+```
 git clone https://github.com/your-username/rag-pipeline.git
 cd rag-pipeline
+```
+</details> <details> <summary>🐍 Step 2 — Create & activate virtual environment</summary>
+ 
+```
+py -3.12 -m venv venv
 
-2️⃣ Create & Activate Virtual Environment
-python -m venv venv
-# Windows:
+# Windows
 venv\Scripts\activate
-# Linux/Mac:
+
+# macOS / Linux
 source venv/bin/activate
+```
+</details> <details> <summary>⚙️ Step 3 — Install dependencies</summary>
 
-3️⃣ Install Dependencies
+```
 pip install -r requirements.txt
+```
+</details> <details> <summary>🧠 Step 4 — Download the Phi-2 Model</summary>
 
-4️⃣ Download Model
-
-The Phi2Q_4_k.ggfu model is large (1.66 GB), so it’s not in this repo.
-👉 Download Here
- and place inside models/ directory.
+The Phi2Q_4_k.ggfu model (~1.66 GB) is not included in the repo.
+👉 [Download here] (https://cas-bridge.xethub.hf.co/xet-bridge-us/6580aa20419afba19a692cc8/cb5d304e5b36d2f91430fff1530842167680b0958c4083b09e04d4dbf8cf7a08?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Content-Sha256=UNSIGNED-PAYLOAD&X-Amz-Credential=cas%2F20250919%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20250919T211759Z&X-Amz-Expires=3600&X-Amz-Signature=3f9791d006b1b54525d94235987637eee58a46202cb13e1d99454a2b2901a218&X-Amz-SignedHeaders=host&X-Xet-Cas-Uid=public&response-content-disposition=inline%3B+filename*%3DUTF-8%27%27phi-2.Q4_K_M.gguf%3B+filename%3D%22phi-2.Q4_K_M.gguf%22%3B&x-id=GetObject&Expires=1758320279&Policy=eyJTdGF0ZW1lbnQiOlt7IkNvbmRpdGlvbiI6eyJEYXRlTGVzc1RoYW4iOnsiQVdTOkVwb2NoVGltZSI6MTc1ODMyMDI3OX19LCJSZXNvdXJjZSI6Imh0dHBzOi8vY2FzLWJyaWRnZS54ZXRodWIuaGYuY28veGV0LWJyaWRnZS11cy82NTgwYWEyMDQxOWFmYmExOWE2OTJjYzgvY2I1ZDMwNGU1YjM2ZDJmOTE0MzBmZmYxNTMwODQyMTY3NjgwYjA5NThjNDA4M2IwOWUwNGQ0ZGJmOGNmN2EwOCoifV19&Signature=LuBwPW25utjxw%7ED9YJiYnYHm%7E1JIR4phreTWysMS8y9VRNlPv7ubbj2v0O9nbOrISDfllFL7p0oS9-PDFLM6ZdpWqqst2yqpE33MqdYZ02w4NI28Wt0a9t9zgVgQNd%7E0cW1PGn8cIMq5zs31af01eSiaT2HWQcaf-ikS71zyaFUkQt1DMbFMMwNyUGVmxjvaQNOvjPptqbbbjZQu9Hh84wVdHafi2%7EBvfVVxF9rLiTlAC6KBPYy5rJ2YbZlLgf-i378pesQZWXZ8-4TGCySKUmgDa%7Ej7G79cvVQyoOYFcegVon%7EuO210PfJ4joNpXa66xQdoYMUFbTkz2RoNyU787A__&Key-Pair-Id=K2L8F4GPSG1IFC)
+ and place it in the models/ directory.
 
 </details>
-<details> <summary><h2>⚙️ Running the Pipeline</h2></summary>
-▶️ Ingest Data
-python ingest_data.py
+## ▶️ Execution
+<details> <summary>📥 Step 1 — Ingest & Index Data</summary>
+- First run this create vector emmbedings / chunks and store it in ChromaDB
 
-▶️ Launch Web App
+ ```
+ python ingest_data.py
+```
+
+
+- ✅ ## Converts files/URLs into chunks
+- ✅ ## Creates embeddings
+- ✅ ## Stores vectors in ChromaDB
+
+</details> <details> <summary>💡 Step 2 — Run the Flask Web App</summary>
 python app.py
 
 
-✔️ Opens Flask Web UI
-✔️ Accepts queries
-✔️ Retrieves top-k matches
-✔️ Refines with Phi-2 LLM
-✔️ Displays final result
+-✅ ### Starts server at http://0.0.0.0:5000
+-✅ ### Upload more files / paste URLs
+-✅ ### Ask questions & get AI-polished results
 
 </details>
-<details> <summary><h2>📂 Supported File & Link Types</h2></summary>
+## 📂 Supported Inputs
 
-📄 PDF (.pdf)
+- ### Documents → .pdf, .docx, .ppt, .txt
 
-📝 Word (.docx)
+- ### Images → .png, .jpeg
 
-🎞️ PowerPoint (.ppt)
-
-📜 Text (.txt)
-
-🖼️ Images (.png, .jpeg)
-
-🌐 Website URLs
-
-▶️ YouTube video links
-
-</details>
-<details> <summary><h2>🖼️ Project Flow Diagram</h2></summary>
-flowchart LR
-    A[User Uploads Docs/Links] --> B[Chunking + Embeddings]
-    B --> C[ChromaDB Storage]
-    D[User Query] --> E[Retrieve Top-k Matches]
-    E --> F[Phi-2 Model]
-    F --> G[Polished Answer to User]
-
-</details>
-<details> <summary><h2>🎯 Example Usage</h2></summary>
-
-Upload a PDF on quantum computing
-
-Run ingest_data.py → indexed into ChromaDB
-
-Start app.py → Ask: “Explain qubits in simple terms”
-
-System retrieves context + Phi-2 generates a refined answer
-
-</details>
-<details> <summary><h2>📌 Notes</h2></summary>
-
-🚫 Model not included (too large) → use provided download link
-
-📦 Repo only contains code, configs, instructions
-
-🗂️ Use .gitignore → exclude venv/ & large files
-
-</details>
-<details> <summary><h2>🤝 Contributing</h2></summary>
-
-💡 Fork → Create a feature branch → Commit → Push → Submit PR 🚀
-
-</details>
-<details> <summary><h2>📜 License</h2></summary>
-
-📄 Licensed under the MIT License
-
-</details>
+- ### Links → websites & YouTube videos (transcripts extracted if available)
