@@ -1,5 +1,5 @@
-#📚 Retrieval-Augmented Generation (RAG) Pipeline
-##🔥 Overview
+#📚 Retrieval-Augmented Generation (RAG) Pipeline #
+##🔥 Overview ##
 
 This project implements a RAG pipeline using ChromaDB + Flask.
 It lets users upload documents (PDF, DOCX, PPT, TXT, PNG, JPEG) and URLs (websites, YouTube videos), converts them into vector embeddings, stores them in ChromaDB, and allows interactive querying with an LLM.
